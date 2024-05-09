@@ -36,7 +36,10 @@ test:
     - requests >=2,<3
   commands:
     - pip check
-    - pytest -vv
+    # Skip test_http_response_accepts_http_enums because of the upstream bug:
+    # AttributeError: 'TestHTTP' object has no attribute 'assertEquals'.
+    # There should be 'assertEqual' instead.
+    - pytest -vv -k "not test_http_response_accepts_http_enums"
 
 about:
   home: https://azure.microsoft.com/en-us/products/functions/
