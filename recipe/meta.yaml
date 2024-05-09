@@ -1,0 +1,53 @@
+{% set name = "azure-functions" %}
+{% set version = "1.19.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: f3494913d137af9fd735e2b2497aa54fc308b64f4902aa286c19b328fa3ae278
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+    - wheel
+  run:
+    - python
+
+test:
+  source_files:
+    - tests
+  imports:
+    - azure.functions
+    - azure.functions._thirdparty
+    - azure.functions.decorators
+    - azure.functions.extension
+  requires:
+    - pip
+    - pytest
+    - requests >=2,<3
+  commands:
+    - pip check
+    - pytest -vv
+
+about:
+  home: https://azure.microsoft.com/en-us/products/functions/
+  doc_url: https://learn.microsoft.com/en-us/azure/azure-functions/
+  dev_url: https://github.com/Azure/Azure-Functions/
+  summary: Azure Functions for Python
+  description: Azure Functions for Python
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - AddYourGitHubIdHere
