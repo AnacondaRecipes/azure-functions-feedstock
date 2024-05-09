@@ -36,18 +36,21 @@ test:
     - requests >=2,<3
   commands:
     - pip check
-    - pytest -vv
+    # Skip test_http_response_accepts_http_enums because of the upstream bug:
+    # AttributeError: 'TestHTTP' object has no attribute 'assertEquals'.
+    # There should be 'assertEqual' instead.
+    - pytest -vv -k "not test_http_response_accepts_http_enums"
 
 about:
   home: https://azure.microsoft.com/en-us/products/functions/
   doc_url: https://learn.microsoft.com/en-us/azure/azure-functions/
-  dev_url: https://github.com/Azure/Azure-Functions/
+  dev_url: https://github.com/Azure/azure-functions-python-library
   summary: Azure Functions for Python
-  description: Azure Functions for Python
+  description: Azure Functions Python SDK
   license: MIT
   license_family: MIT
   license_file: LICENSE
 
 extra:
   recipe-maintainers:
-    - AddYourGitHubIdHere
+    - skupr-anaconda
