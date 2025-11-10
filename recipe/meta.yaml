@@ -1,27 +1,37 @@
 {% set name = "azure-functions" %}
-{% set version = "1.19.0" %}
+{% set version = "1.24.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: f3494913d137af9fd735e2b2497aa54fc308b64f4902aa286c19b328fa3ae278
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-','_') }}-{{ version }}.tar.gz
+  sha256: 18ea1607c7a7268b7a1e1bd0cc28c5cc57a9db6baaacddb39ba0e9f865728187
 
 build:
   number: 0
+  skip: true # [py<37]
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   host:
     - python
     - pip
-    - setuptools
+    - setuptools >=61.0
     - wheel
+    - build # [py<312]
   run:
     - python
+    - werkzeug
 
+# Please install `azure-functions-durable` to use Durable Functions.
+{% set deselect_test = [
+  "--deselect=tests/decorators/test_decorators.py::TestFunctionsApp::test_activity_trigger",
+  "--deselect=tests/decorators/test_decorators.py::TestFunctionsApp::test_durable_client",
+  "--deselect=tests/decorators/test_decorators.py::TestFunctionsApp::test_entity_trigger",
+  "--deselect=tests/decorators/test_decorators.py::TestFunctionsApp::test_orchestration_trigger"
+]%}
 test:
   source_files:
     - tests
@@ -36,10 +46,7 @@ test:
     - requests >=2,<3
   commands:
     - pip check
-    # Skip test_http_response_accepts_http_enums because of the upstream bug:
-    # AttributeError: 'TestHTTP' object has no attribute 'assertEquals'.
-    # There should be 'assertEqual' instead.
-    - pytest -vv -k "not test_http_response_accepts_http_enums"
+    - pytest -vv  {{ deselect_test | join(" ")}}
 
 about:
   home: https://azure.microsoft.com/en-us/products/functions/
