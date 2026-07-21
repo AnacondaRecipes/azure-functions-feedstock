@@ -2,3 +2,10 @@ anaconda_config_version: 1
 upstream_sources:
   - pypi:
       identifier: azure-functions
+  - pypi:
+      identifier: azure-functions
+    feedstock_branch: main-v1
+    version_matchspec: '>=1,<2'
+    supported: true
+    packages:
+      - azure-functions
