@@ -9,10 +9,3 @@ upstream_sources:
     supported: true
     packages:
       - azure-functions
-  - pypi:
-      identifier: azure-functions
-    feedstock_branch: main
-    version_matchspec: '>=2,<3'
-    supported: true
-    packages:
-      - azure-functions
